@@ -7,83 +7,83 @@ var board = {
          row:0,
          col:0,
          isMine: false,
-         isMarked: false,
+         //isMarked: false,
          hidden: true,
-         surroundingMines: 0,
+         //surroundingMines: 0,
       },
       {
          row: 0,
          col: 1,
          isMine: false,
-         isMarked: false,
+         //isMarked: false,
          hidden: true,
-         surroundingMines: 1,
+         //surroundingMines: 1,
       },
       {
          row:0,
          col:2,
          isMine: false,
-         isMarked: false,
+         //isMarked: false,
          hidden: true,
-         surroundingMines: 1,
+         //surroundingMines: 1,
       },
       {
          row:1,
          col:0,
          isMine: false,
-         isMarked: false,
+         //isMarked: false,
          hidden: true,
-         surroundingMines: 0,
+         //surroundingMines: 0,
       },
       {
          row:1,
          col:1,
          isMine: false,
-         isMarked: false,
+         //isMarked: false,
          hidden: true,
-         surroundingMines: 1,
+         //surroundingMines: 1,
       },
       {
          row:1,
          col:2,
          isMine: true,
-         isMarked: false,
+         //isMarked: false,
          hidden: true,
-         surroundingMines: 0,
+         //surroundingMines: 0,
       },
       {
          row:2,
          col:0,
          isMine: false,
-         isMarked: false,
+         //isMarked: false,
          hidden: true,
-         surroundingMines: 0,
+         //surroundingMines: 0,
       },
       {
          row:2,
          col:1,
          isMine: false,
-         isMarked: false,
+         //isMarked: false,
          hidden: true,
-         surroundingMines: 1,
+         //surroundingMines: 1,
       },
       {
          row:2,
          col:2,
          isMine: false,
-         isMarked: false,
+         //isMarked: false,
          hidden: true,
-         surroundingMines: 1, //(hidden: false)??
+         //surroundingMines: 1, //(hidden: false)??
       }]
 }
 
 function startGame () {
+   document.addEventListener("click",checkForWin)
+   document.addEventListener("contextmenu",checkForWin)
+
    for (var loops = 0; loops < board.cells.length; loops++){
       board.cells[loops].surroundingMines = countSurroundingMines(board.cells[loops])
-
-         document.addEventListener("mousedown",checkForWin)
-         document.addEventListener("context",checkForWin)
-               }
+   }
   // Don't remove this function call: it makes the game work!
   lib.initBoard()
 }
@@ -94,10 +94,26 @@ function startGame () {
 // 1. Are all of the cells that are NOT mines visible?
 // 2. Are all of the mines marked?
 function checkForWin () {
-      for (var check = 0; check < board.cells.length; check++){
-         if (board.cells[check].isMine == true)
-         if (board.cells[check].isMarked == true)
+   var youWon = true;
+   for (var check = 0; check < board.cells.length; check++){
+      /* { if (board.cells[check].isMine == true && board.cells[check].isMarked ==true
+      if (board.cells[check].isMine == false && board.cells[check].isHidden == false)
+      else if (true)
+
+   } */
+      var thisCell = board.cells[check];
+      if ((thisCell.isMine === true) && (thisCell.isMarked !== true)){
+            //is a mine but is not marked
+            youWon = false;
       }
+      if(thisCell.hidden === true && thisCell.isMine !== true) {
+            youWon = false;
+      }
+      //console.log(thisCell.row + ":" + thisCell.col + " = " + youWon);
+   }
+   if(youWon) {
+      lib.displayMessage("You win!");
+   }
   // You can use this function call to declare a winner (once you've
   // detected that they've won, that is!)
   //   lib.displayMessage('You win!')
@@ -114,11 +130,10 @@ function checkForWin () {
 function countSurroundingMines (cell) {
    var mineNum = 0;
    var surrounding = lib.getSurroundingCells(cell.row, cell.col)
-   for (var loopsAround = 0; loopsAround < surrounding.length; loopsAround++) {
-      if (surrounding[loopsAround].isMine == true)
-            mineNum ++;
-}
-
+   for (var loopsAround = 0; loopsAround < surrounding.length; loopsAround++){
+      if (surrounding[loopsAround].isMine == true){
+         mineNum ++;
+      }
+   }
    return mineNum;
-
 }
